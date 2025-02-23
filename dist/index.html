@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.3.0"><title>Astro Basics</title><script src="https://kit.fontawesome.com/3a284cca8d.js" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script><style>[data-astro-cid-sckkx6r4]{margin:0;width:100vw;height:100vh;box-sizing:border-box}body{background:radial-gradient(#0d0d36,#000);background-attachment:fixed}.campo[data-astro-cid-ivdev4kk]{border-width:1px;padding:.5rem;margin-right:.5rem;border-radius:9px}.boton1[data-astro-cid-ivdev4kk]{background:linear-gradient(30deg,#0400ff,#1f0cca,#16164e);color:#fff;border:none;padding:.5rem;border-radius:5px}
+</style></head> <body class="flex flex-col items-center" data-astro-cid-sckkx6r4>  <div class="w-[100vw] h-[10vh] flex justify-center items-center"> <h1 class="w-auto text-white">Canciones</h1> </div> <div x-data="{ 
+    artista: '', 
+    titulo: '', 
+    letra: '', 
+    buscando: false,
+    cantantes: [
+  'Shakira', 'Luis Miguel', 'Juan Gabriel', 'Carlos Vives', 'Marc Anthony',
+  'Celia Cruz', 'Rubén Blades', 'Gloria Estefan', 'Chayanne', 'Ricky Martin',
+  'Julio Iglesias', 'José José', 'Vicente Fernández', 'Selena Quintanilla', 'Juanes',
+  'Alejandro Fernández', 'Luis Fonsi', 'Daddy Yankee', 'Maluma', 'Bad Bunny',
+  'Karol G', 'Anuel AA', 'J Balvin', 'Nicky Jam', 'Ozuna',
+  'Camilo', 'Sebastián Yatra', 'Christian Nodal', 'Pablo Alborán', 'Maná',
+  'Caifanes', 'Molotov', 'Café Tacvba', 'Los Fabulosos Cadillacs', 'Los Auténticos Decadentes',
+  'Tito Puente', 'José Feliciano', 'Mercedes Sosa', 'Lila Downs', 'Ana Gabriel',
+  'Paquita la del Barrio', 'Yuri', 'Thalía', 'Paulina Rubio', 'Natalia Lafourcade',
+  'Rosalía', 'Bomba Estéreo', 'Mon Laferte', 'Residente', 'C. Tangana'
+],
+
+    async buscarLetra() {
+        if (!this.artista || !this.titulo) return; // Evita búsquedas vacías
+        this.buscando = true;
+
+        try {
+            const respuesta = await fetch(`https://api.lyrics.ovh/v1/${this.artista}/${this.titulo}`);
+             console.log(respuesta)
+            const datos = await respuesta.json();
+            console.log(datos)
+            this.letra = datos.lyrics || 'Letra no encontrada.';
+        } catch (error) {
+            console.error('Error al buscar la letra:', error);
+            this.letra = 'Error al buscar la letra.';
+        } finally {
+            this.buscando = false;
+        }
+    }
+  }" class="w-[100vw] h-[90vh] flex flex-col items-center" data-astro-cid-ivdev4kk> <div class="m-3" data-astro-cid-ivdev4kk> <input type="text" x-model="artista" placeholder="Artista" class="campo" data-astro-cid-ivdev4kk> <input type="text" x-model="titulo" placeholder="Título de la canción" class="campo" data-astro-cid-ivdev4kk> <button @click="buscarLetra" class="boton1 bg-blue-500" :disabled="buscando" data-astro-cid-ivdev4kk> <span x-show="!buscando" data-astro-cid-ivdev4kk>Buscar</span> <span x-show="buscando" data-astro-cid-ivdev4kk>Buscando...</span> </button> </div> <div class="flex w-[100%] h-[77vh] justify-center" data-astro-cid-ivdev4kk> <div class="sugerencias overflow-scroll w-[20%] bg-slate-400 p-4" data-astro-cid-ivdev4kk> <h3 class="text-white font-bold mb-2" data-astro-cid-ivdev4kk>Sugerencias</h3> <ul class="" data-astro-cid-ivdev4kk> <template x-for="(cantante, index) in cantantes" :key="index" data-astro-cid-ivdev4kk> <li data-astro-cid-ivdev4kk> <button @click="artista = cantante" class="text-white hover:underline" data-astro-cid-ivdev4kk> <span x-text="cantante" data-astro-cid-ivdev4kk></span> </button> </li> </template> </ul> </div> <div class="overflow-scroll w-[80%] p-10 bg-white shadow-lg rounded text-center" data-astro-cid-ivdev4kk> <p x-text="letra || 'Introduce el artista y el título de la canción para buscar la letra.'" class="text-lg leading-relaxed text-gray-700 whitespace-pre-line" data-astro-cid-ivdev4kk></p> </div> </div> </div>   </body></html>
