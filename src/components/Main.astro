@@ -1,0 +1,110 @@
+---
+
+---
+
+<div
+  x-data="{ 
+    artista: '', 
+    titulo: '', 
+    letra: '', 
+    buscando: false,
+    cantantes: [
+  'Shakira', 'Luis Miguel', 'Juan Gabriel', 'Carlos Vives', 'Marc Anthony',
+  'Celia Cruz', 'Rubén Blades', 'Gloria Estefan', 'Chayanne', 'Ricky Martin',
+  'Julio Iglesias', 'José José', 'Vicente Fernández', 'Selena Quintanilla', 'Juanes',
+  'Alejandro Fernández', 'Luis Fonsi', 'Daddy Yankee', 'Maluma', 'Bad Bunny',
+  'Karol G', 'Anuel AA', 'J Balvin', 'Nicky Jam', 'Ozuna',
+  'Camilo', 'Sebastián Yatra', 'Christian Nodal', 'Pablo Alborán', 'Maná',
+  'Caifanes', 'Molotov', 'Café Tacvba', 'Los Fabulosos Cadillacs', 'Los Auténticos Decadentes',
+  'Tito Puente', 'José Feliciano', 'Mercedes Sosa', 'Lila Downs', 'Ana Gabriel',
+  'Paquita la del Barrio', 'Yuri', 'Thalía', 'Paulina Rubio', 'Natalia Lafourcade',
+  'Rosalía', 'Bomba Estéreo', 'Mon Laferte', 'Residente', 'C. Tangana'
+],
+
+    async buscarLetra() {
+        if (!this.artista || !this.titulo) return; // Evita búsquedas vacías
+        this.buscando = true;
+
+        try {
+            const respuesta = await fetch(`https://api.lyrics.ovh/v1/${this.artista}/${this.titulo}`);
+             console.log(respuesta)
+            const datos = await respuesta.json();
+            console.log(datos)
+            this.letra = datos.lyrics || 'Letra no encontrada.';
+        } catch (error) {
+            console.error('Error al buscar la letra:', error);
+            this.letra = 'Error al buscar la letra.';
+        } finally {
+            this.buscando = false;
+        }
+    }
+  }"
+  class="w-[100vw] h-[90vh] flex flex-col items-center"
+>
+  <div class="m-3">
+    <input type="text" x-model="artista" placeholder="Artista" class="campo" />
+    <input
+      type="text"
+      x-model="titulo"
+      placeholder="Título de la canción"
+      class="campo"
+    />
+    <button
+      @click="buscarLetra"
+      class="boton1 bg-blue-500"
+      :disabled="buscando"
+    >
+      <span x-show="!buscando">Buscar</span>
+      <span x-show="buscando">Buscando...</span>
+    </button>
+  </div>
+  <div class="flex w-[100%] h-[77vh] justify-center">
+    <div class="sugerencias overflow-scroll w-[20%] bg-slate-400 p-4">
+      <h3 class="text-white font-bold mb-2">Sugerencias</h3>
+      <ul class="">
+        <template x-for="(cantante, index) in cantantes" :key="index">
+          <li>
+            <button
+              @click="artista = cantante"
+              class="text-white hover:underline"
+            >
+              <span x-text="cantante"></span>
+            </button>
+          </li>
+        </template>
+      </ul>
+    </div>
+
+    <div
+      class="overflow-scroll w-[80%] p-10 bg-white shadow-lg rounded text-center"
+    >
+      <p
+        x-text="letra || 'Introduce el artista y el título de la canción para buscar la letra.'"
+        class="text-lg leading-relaxed text-gray-700 whitespace-pre-line"
+      >
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .campo {
+    border-width: 1px;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 9px;
+  }
+
+  .boton1 {
+    background: linear-gradient(
+      30deg,
+      rgb(4, 0, 255),
+      rgb(31, 12, 202),
+      rgb(22, 22, 78)
+    );
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+  }
+</style>
